@@ -24,17 +24,16 @@ function checkForm(e) {
   searchImages();
 }
 
-function searchImages() {
+async function searchImages() {
   const url = `https://pixabay.com/api/?key=${APIKey}&q=${searchTerm}&image_type=photo&per_page=${paginationLength}&page=${currentPage}`;
-  fetch(url)
-    .then((res) => res.json())
-    .then((res) => {
-      totalPages = definePages(res.totalHits);
-      showImages(res.hits);
-    })
-    .catch((err) => {
-      console.log(err);
-    });
+  try {
+    const res = await fetch(url);
+    const result = await res.json();
+    totalPages = definePages(result.totalHits);
+    showImages(result.hits);
+  } catch (error) {
+    console.log(error);
+  }
 }
 
 function* paginationGenerator(totalPages) {
